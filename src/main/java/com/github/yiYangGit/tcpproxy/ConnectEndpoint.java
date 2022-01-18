@@ -39,6 +39,7 @@ public class ConnectEndpoint {
         }
         status = EndpointStatus.RUNNING;
         serverSocket = ServerSocketChannel.open();
+        int backlog = ServerSocketConfig.DEFAULT_BACKLOG;
         if (socketConfig != null) {
             Integer rxBufSize = socketConfig.getRxBufSize();
             if (rxBufSize != null) {
@@ -48,12 +49,13 @@ public class ConnectEndpoint {
             if (reuseAddress != null) {
                 serverSocket.socket().setReuseAddress(reuseAddress);
             }
+            backlog = socketConfig.getServerBacklog();
         }
         //1秒阻塞方式的acceptSocket
         int soTimeout = 1000;
         serverSocket.socket().setSoTimeout(soTimeout);
         serverSocket.configureBlocking(true);
-        serverSocket.bind(bingAddress);
+        serverSocket.bind(bingAddress, backlog);
         //copyright 此处代码参考apache tomcat 项目的 org.apache.tomcat.util.net.NioEndpoint.Acceptor#run 方法
         Thread thread = new Thread(new Runnable() {
             @Override

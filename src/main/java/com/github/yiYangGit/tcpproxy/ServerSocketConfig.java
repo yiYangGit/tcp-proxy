@@ -5,6 +5,7 @@ package com.github.yiYangGit.tcpproxy;
  */
 public class ServerSocketConfig {
 
+    public static final int DEFAULT_BACKLOG = 1000;
     /**
      * 服务端ServerSocket的配置
      * 实际调用了
@@ -25,7 +26,7 @@ public class ServerSocketConfig {
      * 服务端backlog属性
      * 默认值为100
      */
-    private int serverBacklog = 1000;
+    private int serverBacklog = DEFAULT_BACKLOG;
 
     public Integer getRxBufSize() {
         return rxBufSize;
