@@ -95,6 +95,7 @@ public abstract class ConnectActiveInitHandler extends ChannelInboundHandlerAdap
             }
         }
         cacheBuffers.clear();
+        ctx.fireChannelInactive();
     }
 
     @Override
@@ -118,6 +119,8 @@ public abstract class ConnectActiveInitHandler extends ChannelInboundHandlerAdap
                 }
                 this.onConnectError(shce.cause(), ctx.channel());
             }
+        } else {
+            ctx.fireUserEventTriggered(evt);
         }
     }
 
@@ -129,7 +132,11 @@ public abstract class ConnectActiveInitHandler extends ChannelInboundHandlerAdap
         if (log.isDebugEnabled()) {
             log.debug("exceptionCaught ", cause);
         }
-        this.onConnectError(cause, ctx.channel());
+        if (!this.proxyChannelIsReady) {
+            this.onConnectError(cause, ctx.channel());
+        } else {
+            ctx.fireExceptionCaught(cause);
+        }
     }
 
 }
